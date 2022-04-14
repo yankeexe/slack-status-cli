@@ -5,7 +5,6 @@ Copyright © 2022 YANKEE MAHARJAN
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -38,9 +37,9 @@ func initConfig() {
 	configDirPath := filepath.Join(usr.HomeDir, ".slack-status-cli")
 	viper.AddConfigPath(configDirPath)
 	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
+	viper.SetConfigType("toml")
 
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintln(os.Stderr, viper.ConfigFileUsed())
+		//fmt.Fprintln(os.Stderr, viper.ConfigFileUsed())
 	}
 }
