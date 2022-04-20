@@ -2,6 +2,7 @@ package config
 
 type Config struct {
 	Globals  []string
+	Default  string
 	Profiles map[string]Profile
 }
 

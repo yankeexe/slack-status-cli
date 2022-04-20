@@ -22,7 +22,7 @@ Removes DND if present.`,
 		err := client.SetUserPresence("auto")
 		utils.CheckIfError(err)
 
-		fmt.Println("✅ Status set as active")
+		fmt.Println("✅ Status set to active")
 		err = client.EndDND()
 		utils.CheckIfError(err)
 	},

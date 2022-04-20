@@ -6,5 +6,5 @@ import (
 )
 
 func GetClient() *slack.Client {
-	return slack.New(viper.GetString("token"))
+	return slack.New(viper.GetString("default"))
 }
