@@ -17,7 +17,8 @@ var awayCmd = &cobra.Command{
 	Short: "Set your status to away with DND",
 	Long:  "Set your status to away with DND",
 	Run: func(cmd *cobra.Command, args []string) {
-		client := client.GetClient()
+		client, err := client.GetClient()
+		utils.CheckIfError(err)
 		client.SetUserPresence("away")
 
 		dnd, err := cmd.Flags().GetInt("dnd")
