@@ -17,7 +17,7 @@ import (
 // profileCmd represents the profile command
 var profileCmd = &cobra.Command{
 	Use:   "profile",
-	Short: "Create Slack profile for settings status",
+	Short: "Create and manage Slack profiles",
 	Run: func(cmd *cobra.Command, args []string) {
 		config := config.Config{}
 		err := viper.Unmarshal(&config)
