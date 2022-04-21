@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -64,7 +65,27 @@ to create a new slack profile`)
 }
 
 func handleCreateNewProfile() {
-	fmt.Println("Creating new profile.")
+	profileDetails := struct {
+		Name  string
+		Token string
+	}{}
+
+	var qs = []*survey.Question{
+		{
+			Name:     "name",
+			Prompt:   &survey.Input{Message: "Profile name"},
+			Validate: survey.Required,
+		},
+		{
+			Name:     "token",
+			Prompt:   &survey.Password{Message: "User OAuth Token"},
+			Validate: survey.Required,
+		},
+	}
+
+	err := survey.Ask(qs, &profileDetails)
+	utils.CheckIfError(err)
+
 	os.Exit(0)
 }
 
