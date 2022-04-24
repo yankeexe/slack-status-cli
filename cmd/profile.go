@@ -10,7 +10,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/yankeexe/slack-status-cli/internal/config"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
 )
@@ -21,8 +20,6 @@ var profileCmd = &cobra.Command{
 	Short: "Create and manage Slack profiles",
 	Run: func(cmd *cobra.Command, args []string) {
 		config := config.Config{}
-		err := viper.Unmarshal(&config)
-		utils.CheckIfError(err)
 
 		createNew, err := cmd.Flags().GetBool("create")
 		utils.CheckIfError(err)
@@ -35,7 +32,7 @@ var profileCmd = &cobra.Command{
 		}
 
 		if createNew {
-			handleCreateNewProfile()
+			handleCreateNewProfile(&config)
 		}
 
 		if manageProfile {
@@ -64,12 +61,8 @@ to create a new slack profile`)
 	os.Exit(1)
 }
 
-func handleCreateNewProfile() {
-	profileDetails := struct {
-		Name  string
-		Token string
-	}{}
-
+func handleCreateNewProfile(c *config.Config) {
+	profileInfo := config.ProfileInfo{}
 	var qs = []*survey.Question{
 		{
 			Name:     "name",
@@ -83,8 +76,10 @@ func handleCreateNewProfile() {
 		},
 	}
 
-	err := survey.Ask(qs, &profileDetails)
+	err := survey.Ask(qs, &profileInfo)
 	utils.CheckIfError(err)
+	fmt.Println(profileInfo)
+	c.AddProfile(profileInfo)
 
 	os.Exit(0)
 }
