@@ -22,7 +22,7 @@ var addCmd = &cobra.Command{
 Valid durations include:
 - minutes, hours or days.
 
-Suffixes for these duration:
+Options for the duration:
 minute: m, min, mins       :: Example: 10 m, 10 mins, 10minute, 10 minutes
 hour:   h, hr, hour, hours :: Example: 1 h, 1hr, 1 hour, 1 hours
 day:    d, day, days       :: Example: 2d, 2 day, 2 days
