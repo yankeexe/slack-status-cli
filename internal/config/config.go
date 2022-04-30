@@ -22,8 +22,8 @@ var ConfigDirPath = filepath.Join(usr.HomeDir, ".slack-status-cli")
 var ConfigFilePath = filepath.Join(ConfigDirPath, "config")
 
 type Config struct {
-	Globals  []string
 	Default  ProfileInfo
+	Globals  []string
 	Profiles map[string]Profile
 }
 
@@ -60,16 +60,14 @@ func (c *Config) GetProfiles() []string {
 	Contents of config file will be checked later on:
 		either nil or has some.
 */
-func (c *Config) exists() bool {
+func (c *Config) exists() {
 	if _, err := os.Stat(ConfigDirPath); os.IsNotExist(err) {
-		color.Red.Println("Config directory not found")
+		color.Red.Println("Config directory does not exist")
 		if err := os.Mkdir(ConfigDirPath, 0770); err != nil {
 			utils.CheckIfError(err)
-			color.Green.Println("Config directory created:", ConfigDirPath)
 		}
-		return false
+		color.Green.Println("Config directory created:", ConfigDirPath)
 	}
-	return true
 }
 
 func (c *Config) AddProfile(profileInfo ProfileInfo) {
@@ -84,6 +82,11 @@ To edit profile information: st profile --edit`)
 				os.Exit(1)
 			}
 		}
+	}
+
+	// handle nil map
+	if c.Profiles == nil {
+		c.Profiles = make(map[string]Profile)
 	}
 	c.Profiles[profileInfo.Name] = Profile{Token: profileInfo.Token}
 	if c.Default.Name == "" {
