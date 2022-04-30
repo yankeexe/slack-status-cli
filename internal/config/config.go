@@ -33,8 +33,15 @@ type ProfileInfo struct {
 }
 
 type Profile struct {
-	Token  string   `mapstructure:"token"`
-	Status []string `mapstructure:"Status"`
+	Token      string      `mapstructure:"token"`
+	StatusList StatusStore `mapstructure:"StatusList"`
+}
+
+type StatusStore struct {
+	Duration         string
+	DurationReadable string
+	Emoji            string
+	Status           string
 }
 
 // Load config file values
