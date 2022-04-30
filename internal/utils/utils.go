@@ -13,3 +13,12 @@ func CheckIfError(err error) {
 	color.Red.Println(err)
 	os.Exit(1)
 }
+
+func HandleNoProfiles() {
+	color.Red.Println(`No profiles found.
+
+$ st profile --create
+to create a new slack profile`)
+
+	os.Exit(1)
+}

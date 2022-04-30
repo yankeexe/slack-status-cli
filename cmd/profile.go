@@ -21,7 +21,9 @@ var profileCmd = &cobra.Command{
 	Use:   "profile",
 	Short: "Create and manage Slack profiles",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
+		flagCount := cmd.Flags().NFlag()
+
+		if flagCount == 0 {
 			cmd.Help()
 			os.Exit(0)
 		}
@@ -32,7 +34,6 @@ var profileCmd = &cobra.Command{
 		createNew, _ := cmd.Flags().GetBool("create")
 		manageProfile, _ := cmd.Flags().GetBool("manage")
 		defaultProfile, _ := cmd.Flags().GetBool("default")
-		flagCount := cmd.Flags().NFlag()
 
 		if flagCount > 1 {
 			color.Red.Println("accepts at most 1 flag, received", flagCount)
@@ -53,7 +54,7 @@ var profileCmd = &cobra.Command{
 
 		profiles := config.GetProfiles()
 		if len(profiles) == 0 {
-			handleNoProfiles()
+			utils.HandleNoProfiles()
 		}
 	},
 }
@@ -63,15 +64,6 @@ func init() {
 	profileCmd.Flags().BoolP("create", "c", false, "create a new slack profile; sets default profile if not present")
 	profileCmd.Flags().BoolP("manage", "m", false, "manage slack profile")
 	profileCmd.Flags().BoolP("default", "d", false, "select default profile")
-}
-
-func handleNoProfiles() {
-	color.Red.Println(`No profiles found.
-
-$ st profile --create
-to create a new slack profile`)
-
-	os.Exit(1)
 }
 
 func handleCreateNewProfile(c *config.Config) {
@@ -100,9 +92,15 @@ func handleCreateNewProfile(c *config.Config) {
 func handleManageProfile(c *config.Config) {
 	log.Println("Managing profile.")
 	selectedProfile := ""
+	profiles := c.GetProfiles()
+
+	if len(profiles) == 0 {
+		utils.HandleNoProfiles()
+	}
+
 	prompt := &survey.Select{
 		Message: "Select profile to manage:",
-		Options: c.GetProfiles(),
+		Options: profiles,
 	}
 	survey.AskOne(prompt, &selectedProfile)
 	log.Println("Selected profiles", selectedProfile)
@@ -112,11 +110,18 @@ func handleManageProfile(c *config.Config) {
 func handleSetDefaultProfile(c *config.Config) {
 	log.Println("Setting default profile")
 	selectedProfile := ""
+	profiles := c.GetProfiles()
+
+	if len(profiles) == 0 {
+		utils.HandleNoProfiles()
+	}
+
 	prompt := &survey.Select{
 		Message: "Select profile to set as default:",
-		Options: c.GetProfiles(),
+		Options: profiles,
 	}
 	survey.AskOne(prompt, &selectedProfile)
 	c.Default = config.ProfileInfo{Name: selectedProfile, Token: viper.GetString(fmt.Sprintf("profiles.%s.token", selectedProfile))}
 	c.Save()
+	color.Green.Println("Default profile:", selectedProfile)
 }
