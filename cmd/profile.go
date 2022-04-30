@@ -11,6 +11,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/yankeexe/slack-status-cli/internal/config"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
 )
@@ -23,13 +24,13 @@ var profileCmd = &cobra.Command{
 		config := config.Config{}
 		config.Load()
 
-		createNew, err := cmd.Flags().GetBool("create")
-		utils.CheckIfError(err)
-		manageProfile, err := cmd.Flags().GetBool("manage")
-		utils.CheckIfError(err)
+		createNew, _ := cmd.Flags().GetBool("create")
+		manageProfile, _ := cmd.Flags().GetBool("manage")
+		defaultProfile, _ := cmd.Flags().GetBool("default")
+		flagCount := cmd.Flags().NFlag()
 
-		if createNew && manageProfile {
-			color.Red.Println("Cannot use both create and manage flag at the same time")
+		if flagCount > 1 {
+			color.Red.Println("accepts at most 1 flag, received", flagCount)
 			os.Exit(1)
 		}
 
@@ -38,7 +39,11 @@ var profileCmd = &cobra.Command{
 		}
 
 		if manageProfile {
-			handleManageProfile()
+			handleManageProfile(&config)
+		}
+
+		if defaultProfile {
+			handleSetDefaultProfile(&config)
 		}
 
 		profiles := config.GetProfiles()
@@ -52,6 +57,7 @@ func init() {
 	rootCmd.AddCommand(profileCmd)
 	profileCmd.Flags().BoolP("create", "c", false, "create a new slack profile")
 	profileCmd.Flags().BoolP("manage", "m", false, "manage slack profile")
+	profileCmd.Flags().BoolP("default", "d", false, "select default profile")
 }
 
 func handleNoProfiles() {
@@ -86,7 +92,28 @@ func handleCreateNewProfile(c *config.Config) {
 	os.Exit(0)
 }
 
-func handleManageProfile() {
-	fmt.Println("Managing profile.")
+func handleManageProfile(c *config.Config) {
+	log.Println("Managing profile.")
+	selectedProfile := ""
+	prompt := &survey.Select{
+		Message: "Select profile to manage:",
+		Options: c.GetProfiles(),
+	}
+	survey.AskOne(prompt, &selectedProfile)
+	log.Println("Selected profiles", selectedProfile)
 	os.Exit(0)
+}
+
+func handleSetDefaultProfile(c *config.Config) {
+	log.Println("Setting default profile")
+	selectedProfile := ""
+	prompt := &survey.Select{
+		Message: "Select profile to set as default:",
+		Options: c.GetProfiles(),
+	}
+	survey.AskOne(prompt, &selectedProfile)
+	c.Default.Name = selectedProfile
+	c.Default.Token = viper.GetString(fmt.Sprintf("profiles.%s.token", selectedProfile))
+	log.Println("Selected profiles", selectedProfile)
+	c.Save()
 }

@@ -21,15 +21,15 @@ var usr, _ = user.Current()
 var ConfigDirPath = filepath.Join(usr.HomeDir, ".slack-status-cli")
 var ConfigFilePath = filepath.Join(ConfigDirPath, "config")
 
-type ProfileInfo struct {
-	Name  string
-	Token string
-}
-
 type Config struct {
 	Globals  []string
-	Default  string
+	Default  ProfileInfo
 	Profiles map[string]Profile
+}
+
+type ProfileInfo struct {
+	Name  string `mapstructure:"name"`
+	Token string `mapstructure:"token"`
 }
 
 type Profile struct {
@@ -84,11 +84,15 @@ To edit profile information: st profile --edit`)
 				os.Exit(1)
 			}
 		}
-
-		c.Profiles[profileInfo.Name] = Profile{Token: profileInfo.Token}
-		data, err := toml.Marshal(c)
-		utils.CheckIfError(err)
-		ioutil.WriteFile("/home/yankee/.slack-status-cli/config", data, 0777)
-		color.Green.Println(fmt.Sprintf("Successfully added Profile: '%s' to config.", profileInfo.Name))
 	}
+	c.Profiles[profileInfo.Name] = Profile{Token: profileInfo.Token}
+	c.Save()
+	color.Green.Println(fmt.Sprintf("Successfully added Profile: '%s' to config.", profileInfo.Name))
+}
+
+func (c *Config) Save() {
+	data, err := toml.Marshal(c)
+	utils.CheckIfError(err)
+	err = ioutil.WriteFile(ConfigFilePath, data, 0777)
+	utils.CheckIfError(err)
 }
