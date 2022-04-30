@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -20,6 +21,7 @@ var profileCmd = &cobra.Command{
 	Short: "Create and manage Slack profiles",
 	Run: func(cmd *cobra.Command, args []string) {
 		config := config.Config{}
+		config.Load()
 
 		createNew, err := cmd.Flags().GetBool("create")
 		utils.CheckIfError(err)
@@ -78,7 +80,7 @@ func handleCreateNewProfile(c *config.Config) {
 
 	err := survey.Ask(qs, &profileInfo)
 	utils.CheckIfError(err)
-	fmt.Println(profileInfo)
+	log.Println("New profile", profileInfo)
 	c.AddProfile(profileInfo)
 
 	os.Exit(0)

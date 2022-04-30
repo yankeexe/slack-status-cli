@@ -3,13 +3,23 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/user"
+
+	"path/filepath"
+
+	"github.com/spf13/viper"
 
 	"github.com/gookit/color"
 	"github.com/pelletier/go-toml"
-	"github.com/spf13/viper"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
 )
+
+var usr, _ = user.Current()
+
+var ConfigDirPath = filepath.Join(usr.HomeDir, ".slack-status-cli")
+var ConfigFilePath = filepath.Join(ConfigDirPath, "config")
 
 type ProfileInfo struct {
 	Name  string
@@ -27,7 +37,9 @@ type Profile struct {
 	Status []string `mapstructure:"Status"`
 }
 
+// Load config file values
 func (c *Config) Load() {
+	c.exists()
 	err := viper.Unmarshal(&c)
 	utils.CheckIfError(err)
 }
@@ -40,9 +52,28 @@ func (c *Config) GetProfiles() []string {
 	return profiles
 }
 
+/*
+	@NOTE:
+	Just return if the config directory exists.
+	If it does not create one.
+	If it exists, do not care if config file is there.
+	Contents of config file will be checked later on:
+		either nil or has some.
+*/
+func (c *Config) exists() bool {
+	if _, err := os.Stat(ConfigDirPath); os.IsNotExist(err) {
+		color.Red.Println("Config directory not found")
+		if err := os.Mkdir(ConfigDirPath, 0770); err != nil {
+			utils.CheckIfError(err)
+			color.Green.Println("Config directory created:", ConfigDirPath)
+		}
+		return false
+	}
+	return true
+}
+
 func (c *Config) AddProfile(profileInfo ProfileInfo) {
-	fmt.Println("Adding profile")
-	viper.Unmarshal(&c)
+	log.Println("Adding profile")
 	profiles := c.GetProfiles()
 
 	if len(profiles) != 0 {
@@ -53,14 +84,11 @@ To edit profile information: st profile --edit`)
 				os.Exit(1)
 			}
 		}
-		//currentProfiles := viper.GetStringMapString("profiles")
-		newProfile := make(map[string]Profile)
-		newProfile[profileInfo.Name] = Profile{Token: profileInfo.Token}
-		c.Profiles = newProfile
+
+		c.Profiles[profileInfo.Name] = Profile{Token: profileInfo.Token}
 		data, err := toml.Marshal(c)
 		utils.CheckIfError(err)
-		fmt.Println("Config", c)
-		fmt.Println("Writing to config file...")
 		ioutil.WriteFile("/home/yankee/.slack-status-cli/config", data, 0777)
+		color.Green.Println(fmt.Sprintf("Successfully added Profile: '%s' to config.", profileInfo.Name))
 	}
 }
