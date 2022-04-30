@@ -86,6 +86,9 @@ To edit profile information: st profile --edit`)
 		}
 	}
 	c.Profiles[profileInfo.Name] = Profile{Token: profileInfo.Token}
+	if c.Default.Name == "" {
+		c.Default = profileInfo
+	}
 	c.Save()
 	color.Green.Println(fmt.Sprintf("Successfully added Profile: '%s' to config.", profileInfo.Name))
 }

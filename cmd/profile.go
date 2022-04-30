@@ -21,6 +21,11 @@ var profileCmd = &cobra.Command{
 	Use:   "profile",
 	Short: "Create and manage Slack profiles",
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(0)
+		}
+
 		config := config.Config{}
 		config.Load()
 
@@ -55,7 +60,7 @@ var profileCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(profileCmd)
-	profileCmd.Flags().BoolP("create", "c", false, "create a new slack profile")
+	profileCmd.Flags().BoolP("create", "c", false, "create a new slack profile; sets default profile if not present")
 	profileCmd.Flags().BoolP("manage", "m", false, "manage slack profile")
 	profileCmd.Flags().BoolP("default", "d", false, "select default profile")
 }
@@ -112,8 +117,6 @@ func handleSetDefaultProfile(c *config.Config) {
 		Options: c.GetProfiles(),
 	}
 	survey.AskOne(prompt, &selectedProfile)
-	c.Default.Name = selectedProfile
-	c.Default.Token = viper.GetString(fmt.Sprintf("profiles.%s.token", selectedProfile))
-	log.Println("Selected profiles", selectedProfile)
+	c.Default = config.ProfileInfo{Name: selectedProfile, Token: viper.GetString(fmt.Sprintf("profiles.%s.token", selectedProfile))}
 	c.Save()
 }
