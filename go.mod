@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.4
 	github.com/gookit/color v1.5.0
-	github.com/pelletier/go-toml v1.9.4
+	github.com/pelletier/go-toml/v2 v2.0.0-beta.8
 	github.com/slack-go/slack v0.10.2
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
@@ -22,7 +22,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
-	github.com/pelletier/go-toml/v2 v2.0.0-beta.8 // indirect
+	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
