@@ -37,7 +37,7 @@ func initConfig() {
 	configDirPath := filepath.Join(usr.HomeDir, ".slack-status-cli")
 	viper.AddConfigPath(configDirPath)
 	viper.SetConfigName("config")
-	viper.SetConfigType("toml")
+	viper.SetConfigType("yaml")
 
 	if err := viper.ReadInConfig(); err != nil {
 		//fmt.Fprintln(os.Stderr, viper.ConfigFileUsed())

@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/pelletier/go-toml/v2"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
 	"math"
@@ -164,7 +164,7 @@ func (c *Config) AddStatus(store StatusStore) {
 }
 
 func (c *Config) Save() {
-	data, err := toml.Marshal(c)
+	data, err := yaml.Marshal(c)
 	utils.CheckIfError(err)
 	err = ioutil.WriteFile(ConfigFilePath, data, 0777)
 	utils.CheckIfError(err)
