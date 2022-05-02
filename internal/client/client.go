@@ -8,8 +8,8 @@ import (
 )
 
 func GetClient() (*slack.Client, error) {
-	if viper.GetString("default") == "" {
+	if viper.GetString("default.token") == "" {
 		return nil, errors.New("slack token not set")
 	}
-	return slack.New(viper.GetString("default")), nil
+	return slack.New(viper.GetString("default.token")), nil
 }
