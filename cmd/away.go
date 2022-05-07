@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/yankeexe/slack-status-cli/internal/client"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
@@ -15,19 +14,33 @@ import (
 var awayCmd = &cobra.Command{
 	Use:   "away",
 	Short: "Set your status to away with DND",
-	Long:  "Set your status to away with DND",
+	Long: `Set your status to away with DND
+
+Valid durations for --dnd flag includes:
+- minutes, hours or days.
+DEFAULTS to minutes
+
+NOTE: use single or double quotes around the value if contains space.
+OPTIONS for the duration:
+minute: m, min, mins       :: Example: "10 m", "10 mins", 10minute, "10 minutes"
+hour:   h, hr, hour, hours :: Example: "1 h", 1hr, "1 hour", "1 hours"
+day:    d, day, days       :: Example: 2d, "2 day", 2days
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, err := client.GetClient()
 		utils.CheckIfError(err)
 		client.SetUserPresence("away")
 
-		dnd, err := cmd.Flags().GetInt("dnd")
+		dnd, err := cmd.Flags().GetString("dnd")
 		utils.CheckIfError(err)
+		fmt.Println("user input", dnd)
+		parsed := utils.ParseDuration(dnd)
 
-		if dnd != 0 {
-			_, err := client.SetSnooze(dnd)
+		if dnd != "0" {
+			_, err := client.SetSnooze(parsed.AbsolutePeriod)
 			utils.CheckIfError(err)
-			fmt.Println(fmt.Sprintf("🚫 DND enabled for %d minutes", dnd))
+			fmt.Println(fmt.Sprintf("🚫 DND enabled for %v", parsed.UserDefinedDuration))
 		}
 		fmt.Println("✅ Status set to away!")
 	},
@@ -35,5 +48,5 @@ var awayCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(awayCmd)
-	awayCmd.Flags().Int("dnd", 0, "set do not disturb mode with duration in minutes")
+	awayCmd.Flags().String("dnd", "", "set do not disturb mode with user-defined duration")
 }

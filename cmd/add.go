@@ -20,6 +20,7 @@ var addCmd = &cobra.Command{
 
 Valid durations include:
 - minutes, hours or days.
+Defaults to minutes
 
 Options for the duration:
 minute: m, min, mins       :: Example: 10 m, 10 mins, 10minute, 10 minutes
@@ -39,15 +40,17 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 			},
 			{
 				Name:     "UserDefinedDuration",
-				Prompt:   &survey.Input{Message: "Message duration", Help: "Example: 25 mins, 2 hours, 1 day | Defaults to minutes"},
+				Prompt:   &survey.Input{Message: "Message parsed", Help: "Example: 25 mins, 2 hours, 1 day | Defaults to minutes"},
 				Validate: survey.Required,
 			},
 		}
 		err := survey.Ask(qs, &statusContainer)
 		utils.CheckIfError(err)
-		statusContainer.ParseDuration()
-		log.Printf("Status Container: %+v\n", statusContainer)
 
+		parsed := utils.ParseDuration(statusContainer.UserDefinedDuration)
+		statusContainer.UserDefinedDuration = parsed.UserDefinedDuration
+		statusContainer.Period = parsed.AbsolutePeriod
+		log.Printf("Status Container: %+v\n", statusContainer)
 		c.AddStatus(statusContainer)
 
 	},

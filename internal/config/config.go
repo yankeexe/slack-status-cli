@@ -5,12 +5,8 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
-	"math"
 	"os"
 	"os/user"
-	"regexp"
-	"strconv"
-
 	"path/filepath"
 
 	"github.com/spf13/viper"
@@ -45,55 +41,6 @@ type StatusStore struct {
 	UserDefinedDuration string
 	Period              int
 	Emoji               string
-}
-
-/*
-	Parses user duration for minute, hour, and day.
-	Defaults to minutes
-
-	Check the duration string has one of the suffix  (minutes, hour, days) in a array.
-	If it has value in that array then take that suffix and get numbers our of it.
-
-	@CONDITIONS
-	minutes cannot be more than 43800
-	hours cannot be more than 730
-	day cannot be more than 30
-
-	@REGEX:
-		(?P<Name>pattern) = match group
-		^\d+ = starts with any digits with one or more matches
-		.? = optional any character after the digits
-		---
-		-- Matches for duration suffix
-		(m$|min$|minutes?|h$|hr$|hours?|d$|days?)?
-		$ = match with character/word ending before the symbol
-		| = OR
-*/
-func (status *StatusStore) ParseDuration() {
-	r := regexp.MustCompile(`(?P<Period>^\d+).?(?P<Duration>m$|min$|minutes?|h$|hr$|hours?|d$|days?)?`)
-	match := r.FindStringSubmatch(status.UserDefinedDuration)
-	log.Println("Match", match)
-
-	if len(match) == 0 {
-		color.Red.Println(`Invalid status duration
-Use 'st help add' for more information.
-		`)
-		os.Exit(1)
-	}
-
-	statusPeriod, err := strconv.ParseFloat(match[1], 32)
-	utils.CheckIfError(err)
-
-	// statusPeriod will be floored with ``int`` type casting.
-	normalizedStatusPeriod := int(math.Abs(statusPeriod))
-
-	statusDuration := match[2]
-	if statusDuration == "" {
-		statusDuration = "minutes"
-	}
-	absPeriod := utils.DurationConverter(normalizedStatusPeriod, statusDuration)
-	status.UserDefinedDuration = fmt.Sprintf("%d %s", normalizedStatusPeriod, statusDuration)
-	status.Period = absPeriod
 }
 
 // Load config file values
