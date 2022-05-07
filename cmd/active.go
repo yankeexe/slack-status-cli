@@ -16,16 +16,17 @@ var activeCmd = &cobra.Command{
 	Use:   "active",
 	Short: "Set yourself to active",
 	Long: `Set yourself to active.
-Removes DND if present.`,
+Removes DND and status if present.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, err := client.GetClient()
 		utils.CheckIfError(err)
 		err = client.SetUserPresence("auto")
 		utils.CheckIfError(err)
-
-		fmt.Println("✅ Status set to active")
+		err = client.UnsetUserCustomStatus()
+		utils.CheckIfError(err)
 		err = client.EndDND()
 		utils.CheckIfError(err)
+		fmt.Println("✅ Status set to active")
 	},
 }
 
