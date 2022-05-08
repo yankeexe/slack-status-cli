@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/AlecAivazis/survey/v2"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
@@ -22,7 +23,7 @@ var ConfigFilePath = filepath.Join(ConfigDirPath, "config")
 
 type Config struct {
 	Default  ProfileInfo
-	Globals  []string
+	Globals  []StatusStore
 	Profiles map[string]Profile
 }
 
@@ -108,6 +109,32 @@ func (c *Config) AddStatus(store StatusStore) {
 	c.Profiles[c.Default.Name] = Profile{Token: profile.Token, StatusList: append(profile.StatusList, store)}
 	log.Printf("After appending %+v\n", c)
 	c.Save()
+}
+
+func (c *Config) AddGlobalStatus(store StatusStore) {
+	fmt.Println("globals", c.Globals)
+	if len(c.Globals) == 0 {
+		log.Println("Appending Globals")
+		c.Globals = append(c.Globals, store)
+		log.Println("Appended Globals", c.Globals)
+		return
+	}
+
+	for k, v := range c.Globals {
+		if store.Status == v.Status {
+			replace := false
+			prompt := &survey.Confirm{
+				Message: "Global status exists: Update?",
+			}
+			survey.AskOne(prompt, &replace)
+			if replace {
+				c.Globals[k] = store
+				return
+			}
+			return
+		}
+	}
+	c.Globals = append(c.Globals, store)
 }
 
 func (c *Config) Save() {
