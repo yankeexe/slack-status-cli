@@ -53,11 +53,11 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 		statusContainer.UserDefinedDuration = parsed.UserDefinedDuration
 		statusContainer.Period = parsed.AbsolutePeriod
 		log.Printf("Status Container: %+v\n", statusContainer)
-		//c.AddStatus(statusContainer)
-		log.Println("Is Global?", global)
 		if global {
 			c.AddGlobalStatus(statusContainer)
 			c.Save()
+		} else {
+			c.AddStatus(statusContainer)
 		}
 
 	},
