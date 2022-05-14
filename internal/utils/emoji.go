@@ -16,64 +16,64 @@ func EmojiKeys() []string {
 }
 
 var EmojiMap = map[string]Emoji{
-	"\uFE0F\u20E3 :hash:": {
+	"#\uFE0F\u20E3 :hash:": {
 		Name:    "Hash Key",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "#\uFE0F\u20E3",
 		Alias:   ":hash:",
 	},
-	"\u002A\uFE0F\u20E3 :keycap_star:": {
+	"*\u002A\uFE0F\u20E3 :keycap_star:": {
 		Name:    "Keycap: *",
-		Unicode: "\u002A\uFE0F\u20E3",
+		Unicode: "*\u002A\uFE0F\u20E3",
 		Alias:   ":keycap_star:",
 	},
-	"\uFE0F\u20E3 :zero:": {
+	"0\uFE0F\u20E3 :zero:": {
 		Name:    "Keycap 0",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "0\uFE0F\u20E3",
 		Alias:   ":zero:",
 	},
-	"\uFE0F\u20E3 :one:": {
+	"1\uFE0F\u20E3 :one:": {
 		Name:    "Keycap 1",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "1\uFE0F\u20E3",
 		Alias:   ":one:",
 	},
-	"\uFE0F\u20E3 :two:": {
+	"2\uFE0F\u20E3 :two:": {
 		Name:    "Keycap 2",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "2\uFE0F\u20E3",
 		Alias:   ":two:",
 	},
-	"\uFE0F\u20E3 :three:": {
+	"3\uFE0F\u20E3 :three:": {
 		Name:    "Keycap 3",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "3\uFE0F\u20E3",
 		Alias:   ":three:",
 	},
-	"\uFE0F\u20E3 :four:": {
+	"4\uFE0F\u20E3 :four:": {
 		Name:    "Keycap 4",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "4\uFE0F\u20E3",
 		Alias:   ":four:",
 	},
-	"\uFE0F\u20E3 :five:": {
+	"5\uFE0F\u20E3 :five:": {
 		Name:    "Keycap 5",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "5\uFE0F\u20E3",
 		Alias:   ":five:",
 	},
-	"\uFE0F\u20E3 :six:": {
+	"6\uFE0F\u20E3 :six:": {
 		Name:    "Keycap 6",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "6\uFE0F\u20E3",
 		Alias:   ":six:",
 	},
-	"\uFE0F\u20E3 :seven:": {
+	"7\uFE0F\u20E3 :seven:": {
 		Name:    "Keycap 7",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "7\uFE0F\u20E3",
 		Alias:   ":seven:",
 	},
-	"\uFE0F\u20E3 :eight:": {
+	"8\uFE0F\u20E3 :eight:": {
 		Name:    "Keycap 8",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "8\uFE0F\u20E3",
 		Alias:   ":eight:",
 	},
-	"\uFE0F\u20E3 :nine:": {
+	"9\uFE0F\u20E3 :nine:": {
 		Name:    "Keycap 9",
-		Unicode: "\uFE0F\u20E3",
+		Unicode: "9\uFE0F\u20E3",
 		Alias:   ":nine:",
 	},
 	"\u00A9\uFE0F :copyright:": {
