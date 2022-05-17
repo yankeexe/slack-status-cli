@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/yankeexe/slack-status-cli/internal/client"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
@@ -34,13 +35,13 @@ day:    d, day, days       :: Example: 2d, "2 day", 2days
 
 		dnd, err := cmd.Flags().GetString("dnd")
 		utils.CheckIfError(err)
-		fmt.Println("user input", dnd)
-		parsed := utils.ParseDuration(dnd)
 
-		if dnd != "0" {
+		if len(dnd) != 0 && dnd != "0" {
+			fmt.Println("Here")
+			parsed := utils.ParseDuration(dnd)
 			_, err := client.SetSnooze(parsed.AbsolutePeriod)
 			utils.CheckIfError(err)
-			fmt.Println(fmt.Sprintf("🚫 DND enabled for %v", parsed.UserDefinedDuration))
+			fmt.Printf("🚫 DND enabled for %v\n", parsed.UserDefinedDuration)
 		}
 		fmt.Println("✅ Status set to away!")
 	},
