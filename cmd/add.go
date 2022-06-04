@@ -5,11 +5,14 @@ Copyright © 2022 YANKEE MAHARJAN
 package cmd
 
 import (
+	"log"
+	"os"
+
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yankeexe/slack-status-cli/internal/config"
 	"github.com/yankeexe/slack-status-cli/internal/utils"
-	"log"
 )
 
 // addCmd represents the add command
@@ -32,6 +35,12 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 		utils.CheckIfError(err)
 		c := config.Config{}
 		c.Load()
+		if len(c.Default.Name) == 0 {
+			color.Red.Println("No Slack profiles found to add status.")
+			color.Green.Println(`Create a slack profile using:
+$ st profile --create`)
+			os.Exit(1)
+		}
 		statusContainer := config.StatusStore{}
 
 		var qs = []*survey.Question{
@@ -43,6 +52,13 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 			{
 				Name:     "UserDefinedDuration",
 				Prompt:   &survey.Input{Message: "Duration", Help: "Example: 25 mins, 2 hours, 1 day | Defaults to minutes"},
+				Validate: survey.Required,
+			},
+			{Name: "Emoji",
+				Prompt: &survey.Select{
+					Message: "Choose an emoji:",
+					Options: utils.EmojiKeys(),
+				},
 				Validate: survey.Required,
 			},
 		}
@@ -59,7 +75,6 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 		} else {
 			c.AddStatus(statusContainer)
 		}
-
 	},
 }
 
