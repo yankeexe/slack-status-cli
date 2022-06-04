@@ -2,12 +2,13 @@ package utils
 
 import (
 	"fmt"
-	"github.com/gookit/color"
 	"log"
 	"math"
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/gookit/color"
 )
 
 func CheckIfError(err error) {

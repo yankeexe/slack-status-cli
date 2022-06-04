@@ -2,13 +2,15 @@ package config
 
 import (
 	"fmt"
-	"github.com/AlecAivazis/survey/v2"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
+
+	"github.com/AlecAivazis/survey/v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/spf13/viper"
 
@@ -34,9 +36,10 @@ type ProfileInfo struct {
 
 type Profile struct {
 	Token      string `mapstructure:"token"`
-	StatusList []StatusStore
+	StatusList map[string]StatusStore
 }
 
+// Mapping key: emoji status UserDefinedDuration
 type StatusStore struct {
 	Status              string
 	UserDefinedDuration string
@@ -57,6 +60,19 @@ func (c *Config) GetProfiles() []string {
 		profiles = append(profiles, k)
 	}
 	return profiles
+}
+
+func (c *Config) GetProfileStatus() []string {
+	statusList := []string{}
+	profile := c.Profiles[c.Default.Name]
+	for k, _ := range profile.StatusList {
+		fmt.Printf("value of k: %v\n", k)
+		statusList = append(statusList, k)
+		// statusList = append(statusList, fmt.Sprintf("%q", strings.ToUpper(k)))
+	}
+
+	log.Printf("Value in slice %+v\n", statusList)
+	return statusList
 }
 
 /*
@@ -106,7 +122,22 @@ To edit profile information: st profile --edit`)
 // AddStatus adds status to the default profile
 func (c *Config) AddStatus(store StatusStore) {
 	profile := c.Profiles[c.Default.Name]
-	c.Profiles[c.Default.Name] = Profile{Token: profile.Token, StatusList: append(profile.StatusList, store)}
+	statusMap := map[string]StatusStore{}
+
+	/*
+		# Breakdown emoji and emoji text
+			Default store.Emoji = 👋 :wave:
+			splitted[0] = 👋
+			splitted[1]  = :wave:
+
+	*/
+	splitted := strings.Fields(store.Emoji)
+	store.Emoji = splitted[1]
+
+	statusMapKey := fmt.Sprintf("%s  %s %s", splitted[0], color.Green.Sprintf(store.Status), color.Gray.Sprintf(store.UserDefinedDuration))
+	statusMap[statusMapKey] = store
+
+	c.Profiles[c.Default.Name] = Profile{Token: profile.Token, StatusList: statusMap}
 	log.Printf("After appending %+v\n", c)
 	c.Save()
 }
