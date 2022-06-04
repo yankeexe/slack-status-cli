@@ -23,3 +23,7 @@ go.work
 ### Go Patch ###
 /vendor/
 /Godeps/
+
+### IDE/Editors
+/.idea
+/.vscode
