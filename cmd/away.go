@@ -37,7 +37,6 @@ day:    d, day, days       :: Example: 2d, "2 day", 2days
 		utils.CheckIfError(err)
 
 		if len(dnd) != 0 && dnd != "0" {
-			fmt.Println("Here")
 			parsed := utils.ParseDuration(dnd)
 			_, err := client.SetSnooze(parsed.AbsolutePeriod)
 			utils.CheckIfError(err)

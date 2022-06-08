@@ -66,7 +66,6 @@ func (c *Config) GetProfileStatus() []string {
 	statusList := []string{}
 	profile := c.Profiles[c.Default.Name]
 	for k, _ := range profile.StatusList {
-		fmt.Printf("value of k: %v\n", k)
 		statusList = append(statusList, k)
 	}
 
@@ -151,7 +150,7 @@ func (c *Config) AddStatus(store StatusStore) {
 }
 
 func (c *Config) AddGlobalStatus(store StatusStore) {
-	fmt.Println("globals", c.Globals)
+	log.Println("globals", c.Globals)
 	if len(c.Globals) == 0 {
 		log.Println("Appending Globals")
 		c.Globals = append(c.Globals, store)

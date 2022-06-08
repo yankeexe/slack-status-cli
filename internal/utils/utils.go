@@ -77,7 +77,7 @@ type ParsedDuration struct {
 		| = OR
 */
 func ParseDuration(duration string) ParsedDuration {
-	fmt.Println("Got", duration)
+	log.Println("Got", duration)
 	r := regexp.MustCompile(`(?P<Period>^\d+)\s?(?P<Duration>m$|min$|minutes?|h$|hr$|hours?|d$|days?)?`)
 	match := r.FindStringSubmatch(duration)
 	log.Println("Match", match)
