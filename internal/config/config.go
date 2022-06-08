@@ -68,10 +68,14 @@ func (c *Config) GetProfileStatus() []string {
 	for k, _ := range profile.StatusList {
 		fmt.Printf("value of k: %v\n", k)
 		statusList = append(statusList, k)
-		// statusList = append(statusList, fmt.Sprintf("%q", strings.ToUpper(k)))
 	}
 
 	log.Printf("Value in slice %+v\n", statusList)
+	if len(statusList) == 0 {
+		color.Red.Println(`No status found. Please add status using:
+$ st add`)
+		os.Exit(0)
+	}
 	return statusList
 }
 
@@ -123,6 +127,10 @@ To edit profile information: st profile --edit`)
 func (c *Config) AddStatus(store StatusStore) {
 	profile := c.Profiles[c.Default.Name]
 	statusMap := map[string]StatusStore{}
+
+	if profile.StatusList != nil {
+		statusMap = profile.StatusList
+	}
 
 	/*
 		# Breakdown emoji and emoji text
