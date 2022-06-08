@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"log"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
@@ -39,7 +40,10 @@ var setCmd = &cobra.Command{
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]
 		log.Printf("Status Details: %+v\n", statusDetails)
 
-		err = client.SetUserCustomStatus(statusDetails.Status, statusDetails.Emoji, int64(statusDetails.Period))
+		statusPeriod := time.Now().Add(time.Duration(statusDetails.Period) * time.Minute).Unix()
+		log.Println("Status Period UNIX", statusPeriod)
+
+		err = client.SetUserCustomStatus(statusDetails.Status, statusDetails.Emoji, statusPeriod)
 		utils.CheckIfError(err)
 
 		if away {
