@@ -9,7 +9,9 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
+	"github.com/yankeexe/slack-status-cli/internal/client"
 	"github.com/yankeexe/slack-status-cli/internal/config"
+	"github.com/yankeexe/slack-status-cli/internal/utils"
 )
 
 // setCmd represents the set command
@@ -20,6 +22,11 @@ var setCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		c := config.Config{}
 		c.Load()
+		client, err := client.GetClient()
+		utils.CheckIfError(err)
+
+		away, err := cmd.Flags().GetBool("away")
+		utils.CheckIfError(err)
 		/*
 			set shows the list of statuses that are stored in the default profile and the global profile.
 		*/
@@ -32,11 +39,18 @@ var setCmd = &cobra.Command{
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]
 		log.Printf("Status Details: %+v\n", statusDetails)
 
-		// err := client.SetUserCustomStatus()
-		// utils.CheckIfError(err)
+		err = client.SetUserCustomStatus(statusDetails.Status, statusDetails.Emoji, int64(statusDetails.Period))
+		utils.CheckIfError(err)
+
+		if away {
+			err = client.SetUserPresence("away")
+			utils.CheckIfError(err)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(setCmd)
+	setCmd.Flags().BoolP("away", "", false, "Set status to away")
+
 }
