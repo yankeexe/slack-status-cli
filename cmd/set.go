@@ -40,7 +40,7 @@ var setCmd = &cobra.Command{
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]
 		log.Printf("Status Details: %+v\n", statusDetails)
 
-		statusPeriod := time.Now().Add(time.Duration(statusDetails.Period) * time.Minute).Unix()
+		statusPeriod := time.Now().Add(time.Duration(statusDetails.Period) * time.Minute).UTC().Unix()
 		log.Println("Status Period UNIX", statusPeriod)
 
 		err = client.SetUserCustomStatus(statusDetails.Status, statusDetails.Emoji, statusPeriod)
