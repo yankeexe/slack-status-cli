@@ -37,6 +37,10 @@ build-darwin:
 	@echo "Compiling darwin build"
 	@CGO_ENABLED=0 GOOS=darwin go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/st-darwin
 
+build-darwin-arm:
+	@echo "Compiling darwin ARM build"
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/st-darwin
+
 build-windows:
 	@echo "Compiling windows build"
 	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/st.exe
@@ -47,6 +51,7 @@ dist: # Create distribution binaries
 	@$(MAKE) -s build-armhf
 	@$(MAKE) -s build-arm64
 	@$(MAKE) -s build-darwin
+	@$(MAKE) -s build-darwin-arm
 	@$(MAKE) -s build-windows
 
 
