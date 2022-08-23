@@ -92,6 +92,7 @@ func handleCreateNewProfile(c *config.Config) {
 func handleManageProfile(c *config.Config) {
 	log.Println("Managing profile.")
 	selectedProfile := ""
+	selectedAction := ""
 	profiles := c.GetProfiles()
 
 	if len(profiles) == 0 {
@@ -103,7 +104,21 @@ func handleManageProfile(c *config.Config) {
 		Options: profiles,
 	}
 	survey.AskOne(prompt, &selectedProfile)
+
+	actionPrompt := &survey.Select{
+		Message: "Select action on profile",
+		Options: []string{"Edit Name", "Update token", "Delete", "Edit status"},
+	}
 	log.Println("Selected profiles", selectedProfile)
+	survey.AskOne(actionPrompt, &selectedAction)
+	log.Println("Selected Action", selectedAction)
+
+	switch selectedAction {
+	case "Delete":
+		fmt.Println("Proceeding to delete")
+		c.DeleteProfile(selectedProfile)
+	}
+
 	os.Exit(0)
 }
 

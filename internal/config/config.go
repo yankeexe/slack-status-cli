@@ -181,3 +181,16 @@ func (c *Config) Save() {
 	err = ioutil.WriteFile(ConfigFilePath, data, 0777)
 	utils.CheckIfError(err)
 }
+
+func (c *Config) DeleteProfile(profile string) {
+	confirm := false
+	prompt := &survey.Confirm{
+		Message: fmt.Sprintf("Are you sure you want to delete the profile: %s?", profile),
+	}
+	survey.AskOne(prompt, &confirm)
+	fmt.Println("Profiles", c.Profiles)
+	if confirm {
+		delete(c.Profiles, profile)
+		c.Save()
+	}
+}
