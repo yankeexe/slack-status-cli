@@ -219,3 +219,21 @@ func (c *Config) RenameProfile(profile string) {
 	}
 	c.Save()
 }
+
+func (c *Config) UpdateToken(profile string) {
+	token := ""
+	prompt := &survey.Password{
+		Message: fmt.Sprintf("Update OAuth token [%s]", profile),
+	}
+	survey.AskOne(prompt, &token)
+	if selected, ok := c.Profiles[profile]; ok {
+		selected.Token = token
+		c.Profiles[profile] = selected
+	}
+
+	if c.Default.Name == profile {
+		c.Default.Token = token
+	}
+	c.Save()
+	color.Green.Println("Token updated!")
+}

@@ -120,6 +120,9 @@ func handleManageProfile(c *config.Config) {
 	case "Rename profile":
 		c.RenameProfile(selectedProfile)
 
+	case "Update token":
+		c.UpdateToken(selectedProfile)
+
 	}
 
 	os.Exit(0)
