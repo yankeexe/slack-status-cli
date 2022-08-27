@@ -194,3 +194,20 @@ func (c *Config) DeleteProfile(profile string) {
 		c.Save()
 	}
 }
+
+func (c *Config) RenameProfile(profile string) {
+	name := ""
+	prompt := &survey.Input{
+		Message: fmt.Sprintf("Rename [%s]:", profile),
+	}
+	survey.AskOne(prompt, &name)
+	fmt.Println("profiles", c.Profiles[profile])
+	if _, exists := c.Profiles[name]; exists {
+		color.Red.Println("Profile already exists!")
+		os.Exit(1)
+	}
+
+	c.Profiles[name] = c.Profiles[profile]
+	delete(c.Profiles, profile)
+	c.Save()
+}

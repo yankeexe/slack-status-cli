@@ -107,7 +107,7 @@ func handleManageProfile(c *config.Config) {
 
 	actionPrompt := &survey.Select{
 		Message: "Select action on profile",
-		Options: []string{"Edit Name", "Update token", "Delete", "Edit status"},
+		Options: []string{"Rename profile", "Update token", "Delete", "Edit status"},
 	}
 	log.Println("Selected profiles", selectedProfile)
 	survey.AskOne(actionPrompt, &selectedAction)
@@ -117,6 +117,9 @@ func handleManageProfile(c *config.Config) {
 	case "Delete":
 		fmt.Println("Proceeding to delete")
 		c.DeleteProfile(selectedProfile)
+	case "Rename profile":
+		c.RenameProfile(selectedProfile)
+
 	}
 
 	os.Exit(0)
