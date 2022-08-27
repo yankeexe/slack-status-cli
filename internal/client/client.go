@@ -9,7 +9,11 @@ import (
 
 func GetClient() (*slack.Client, error) {
 	if viper.GetString("default.token") == "" {
-		return nil, errors.New("slack token not set")
+		return nil, errors.New(`default profile not set
+use:
+st profile --default
+to set default profile
+`)
 	}
 	return slack.New(viper.GetString("default.token")), nil
 }

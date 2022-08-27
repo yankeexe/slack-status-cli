@@ -104,7 +104,7 @@ func (c *Config) AddProfile(profileInfo ProfileInfo) {
 		for _, profile := range c.GetProfiles() {
 			if profile == profileInfo.Name {
 				color.Red.Println(`Profile already exists!
-To edit profile information: st profile --edit`)
+To edit profile information: st profile --manage`)
 				os.Exit(1)
 			}
 		}
@@ -191,7 +191,12 @@ func (c *Config) DeleteProfile(profile string) {
 	fmt.Println("Profiles", c.Profiles)
 	if confirm {
 		delete(c.Profiles, profile)
+		if c.Default.Name == profile {
+			c.Default.Name = ""
+			c.Default.Token = ""
+		}
 		c.Save()
+		color.Green.Println("Profile deleted")
 	}
 }
 
@@ -209,5 +214,8 @@ func (c *Config) RenameProfile(profile string) {
 
 	c.Profiles[name] = c.Profiles[profile]
 	delete(c.Profiles, profile)
+	if c.Default.Name == profile {
+		c.Default.Name = name
+	}
 	c.Save()
 }
