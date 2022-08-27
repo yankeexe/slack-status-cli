@@ -36,11 +36,13 @@ day:    d, day, days       :: Example: 2d, 2 day, 2 days
 		c := config.Config{}
 		c.Load()
 		if len(c.Default.Name) == 0 {
-			color.Red.Println("No Slack profiles found to add status.")
-			color.Green.Println(`Create a slack profile using:
-$ st profile --create`)
+			color.Red.Println(`Default slack profile not set
+use:
+st profile -d
+to select a default profile`)
 			os.Exit(1)
 		}
+
 		statusContainer := config.StatusStore{}
 
 		var qs = []*survey.Question{
