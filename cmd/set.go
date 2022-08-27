@@ -26,6 +26,9 @@ var setCmd = &cobra.Command{
 		client, err := client.GetClient()
 		utils.CheckIfError(err)
 
+		statusList, err := c.GetProfileStatus()
+		utils.CheckIfError(err)
+
 		away, err := cmd.Flags().GetBool("away")
 		utils.CheckIfError(err)
 		/*
@@ -34,7 +37,7 @@ var setCmd = &cobra.Command{
 		status := ""
 		prompt := &survey.Select{
 			Message: "Choose a status:",
-			Options: c.GetProfileStatus(),
+			Options: statusList,
 		}
 		survey.AskOne(prompt, &status)
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -62,20 +63,18 @@ func (c *Config) GetProfiles() []string {
 	return profiles
 }
 
-func (c *Config) GetProfileStatus() []string {
+func (c *Config) GetProfileStatus() ([]string, error) {
 	statusList := []string{}
 	profile := c.Profiles[c.Default.Name]
 	for k, _ := range profile.StatusList {
 		statusList = append(statusList, k)
 	}
 
-	log.Printf("Value in slice %+v\n", statusList)
 	if len(statusList) == 0 {
-		color.Red.Println(`No status found. Please add status using:
+		return nil, errors.New(`No status found. Please add status using:
 $ st add`)
-		os.Exit(0)
 	}
-	return statusList
+	return statusList, nil
 }
 
 /*
@@ -236,4 +235,8 @@ func (c *Config) UpdateToken(profile string) {
 	}
 	c.Save()
 	color.Green.Println("Token updated!")
+}
+
+func (c *Config) EditStatus(profile string) {
+	// Check if there are any status or not
 }
