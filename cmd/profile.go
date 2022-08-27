@@ -34,9 +34,10 @@ var profileCmd = &cobra.Command{
 		createNew, _ := cmd.Flags().GetBool("create")
 		manageProfile, _ := cmd.Flags().GetBool("manage")
 		defaultProfile, _ := cmd.Flags().GetBool("default")
+		selectProfile, _ := cmd.Flags().GetBool("select")
 
-		if flagCount > 1 {
-			color.Red.Println("accepts at most 1 flag, received", flagCount)
+		if !manageProfile && !selectProfile && flagCount > 1 {
+			color.Red.Println("Cannot process these flags together")
 			os.Exit(1)
 		}
 
@@ -45,7 +46,7 @@ var profileCmd = &cobra.Command{
 		}
 
 		if manageProfile {
-			handleManageProfile(&config)
+			handleManageProfile(&config, selectProfile)
 		}
 
 		if defaultProfile {
@@ -64,6 +65,7 @@ func init() {
 	profileCmd.Flags().BoolP("create", "c", false, "create a new slack profile; sets default profile if not present")
 	profileCmd.Flags().BoolP("manage", "m", false, "manage slack profile")
 	profileCmd.Flags().BoolP("default", "d", false, "select default profile")
+	profileCmd.Flags().BoolP("select", "s", false, "select profile for management, use with --manage")
 }
 
 func handleCreateNewProfile(c *config.Config) {
@@ -89,24 +91,29 @@ func handleCreateNewProfile(c *config.Config) {
 	os.Exit(0)
 }
 
-func handleManageProfile(c *config.Config) {
-	log.Println("Managing profile.")
+func handleManageProfile(c *config.Config, selectProfile bool) {
 	selectedProfile := ""
 	selectedAction := ""
 	profiles := c.GetProfiles()
+
+	if !selectProfile && len(c.Default.Name) != 0 {
+		selectedProfile = c.Default.Name
+	}
 
 	if len(profiles) == 0 {
 		utils.HandleNoProfiles()
 	}
 
-	prompt := &survey.Select{
-		Message: "Select profile to manage:",
-		Options: profiles,
+	if selectProfile {
+		prompt := &survey.Select{
+			Message: "Select profile to manage:",
+			Options: profiles,
+		}
+		survey.AskOne(prompt, &selectedProfile)
 	}
-	survey.AskOne(prompt, &selectedProfile)
 
 	actionPrompt := &survey.Select{
-		Message: "Select action on profile",
+		Message: fmt.Sprintf("Select action on profile [%s]", selectedProfile),
 		Options: []string{"Rename profile", "Update token", "Delete", "Edit status"},
 	}
 	log.Println("Selected profiles", selectedProfile)
