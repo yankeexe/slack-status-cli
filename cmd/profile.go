@@ -35,10 +35,25 @@ var profileCmd = &cobra.Command{
 		manageProfile, _ := cmd.Flags().GetBool("manage")
 		defaultProfile, _ := cmd.Flags().GetBool("default")
 		selectProfile, _ := cmd.Flags().GetBool("select")
+		showProfile, _ := cmd.Flags().GetBool("show")
 
 		if !manageProfile && !selectProfile && flagCount > 1 {
 			color.Red.Println("Cannot process these flags together")
 			os.Exit(1)
+		}
+
+		if showProfile {
+			if len(config.Default.Name) > 0 {
+				color.Green.Println("Current profile is:", config.Default.Name)
+				os.Exit(0)
+			} else {
+				color.Red.Println(`Default slack profile not set
+use:
+st profile -d
+to select a default profile`)
+				os.Exit(1)
+			}
+
 		}
 
 		if createNew {
@@ -66,6 +81,8 @@ func init() {
 	profileCmd.Flags().BoolP("manage", "m", false, "manage slack profile")
 	profileCmd.Flags().BoolP("default", "d", false, "select default profile")
 	profileCmd.Flags().BoolP("select", "s", false, "select profile for management, use with --manage")
+	profileCmd.Flags().Bool("show", false, "show current profile")
+
 }
 
 func handleCreateNewProfile(c *config.Config) {
