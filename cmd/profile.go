@@ -100,6 +100,14 @@ func handleManageProfile(c *config.Config, selectProfile bool) {
 		selectedProfile = c.Default.Name
 	}
 
+	if !selectProfile && len(c.Default.Name) == 0 {
+		color.Red.Println(`Default slack profile not set
+use:
+st profile -d
+to select a default profile`)
+		os.Exit(1)
+	}
+
 	if len(profiles) == 0 {
 		utils.HandleNoProfiles()
 	}
