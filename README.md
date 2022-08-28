@@ -86,7 +86,7 @@ Valid durations for time includes:
 > minutes, hours or days.
 DEFAULTS to minutes
 
-NOTE: use single or double quotes around the value if contains space.
+**NOTE: use single or double quotes around the value if contains space.**
 
 OPTIONS for the duration:
 
