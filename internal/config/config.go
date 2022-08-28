@@ -144,7 +144,6 @@ func (c *Config) AddStatus(store StatusStore) {
 	statusMap[statusMapKey] = store
 
 	c.Profiles[c.Default.Name] = Profile{Token: profile.Token, StatusList: statusMap}
-	log.Printf("After appending %+v\n", c)
 	c.Save()
 }
 
@@ -237,6 +236,44 @@ func (c *Config) UpdateToken(profile string) {
 	color.Green.Println("Token updated!")
 }
 
-func (c *Config) EditStatus(profile string) {
-	// Check if there are any status or not
+func (c *Config) EditStatus(profile string, statusList []string) {
+	fmt.Println("status list ", statusList)
+	status := ""
+	prompt := &survey.Select{
+		Message: "Choose a status:",
+		Options: statusList,
+	}
+	survey.AskOne(prompt, &status)
+
+	selectedStatus := c.Profiles[profile].StatusList[status]
+
+	statusContainer := StatusStore{}
+
+	var qs = []*survey.Question{
+		{
+			Name:   "Status",
+			Prompt: &survey.Input{Message: "Status", Default: selectedStatus.Status},
+		},
+		{
+			Name:   "UserDefinedDuration",
+			Prompt: &survey.Input{Message: "Duration", Help: "Example: 25 mins, 2 hours, 1 day | Defaults to minutes", Default: selectedStatus.UserDefinedDuration},
+		},
+		{Name: "Emoji",
+			Prompt: &survey.Select{
+				Message: "Choose an emoji:",
+				Options: utils.EmojiKeys(),
+				Default: fmt.Sprintf("%s %s", strings.Fields(status)[0], selectedStatus.Emoji),
+			},
+		},
+	}
+	err := survey.Ask(qs, &statusContainer)
+	utils.CheckIfError(err)
+
+	parsed := utils.ParseDuration(statusContainer.UserDefinedDuration)
+	statusContainer.UserDefinedDuration = parsed.UserDefinedDuration
+	statusContainer.Period = parsed.AbsolutePeriod
+	selectedStatus = statusContainer
+	fmt.Println("selected", selectedStatus)
+	delete(c.Profiles[profile].StatusList, status)
+	c.AddStatus(statusContainer)
 }

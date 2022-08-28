@@ -155,6 +155,12 @@ to select a default profile`)
 	case "Update token":
 		c.UpdateToken(selectedProfile)
 
+	case "Edit status":
+		statusList, err := c.GetProfileStatus()
+		utils.CheckIfError(err)
+
+		c.EditStatus(selectedProfile, statusList)
+
 	}
 
 	os.Exit(0)
