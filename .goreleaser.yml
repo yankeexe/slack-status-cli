@@ -1,0 +1,41 @@
+project_name: st
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+builds:
+  - ldflags:
+      - -s -w -X "github.com/yankeexe/slack-status-cli/cmd.Version={{.Tag}}"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+
+archives:
+  - format: binary
+
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}-local"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+signs:
+- cmd: cosign
+  env:
+  - COSIGN_EXPERIMENTAL=1
+  certificate: '${artifact}.pem'
+  output: true
+  artifacts: checksum
+  args:
+    - sign-blob
+    - '--output-certificate=${certificate}'
+    - '--output-signature=${signature}'
+    - '${artifact}'
