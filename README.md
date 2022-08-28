@@ -13,9 +13,9 @@ Lightning fast Slack status updates!⚡
 st profile --create  # shorthand -c
 ```
 
-## Usage
+## Usage :rainbow:
 
-### Add new status
+### Add new status :headphones:
 
 Add your status, duration and emoji
 
@@ -24,8 +24,7 @@ st add
 ```
 
 
-### Select status
-
+### Select status :eyes:
 
 ```bash
 st set
@@ -44,7 +43,7 @@ st away
 st away --dnd <time duration>
 ```
 
-### Set yourself active
+### Set yourself active :surfer:
 
 Remove any status, or DND settings
 
