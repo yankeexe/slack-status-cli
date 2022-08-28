@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yankeexe/slack-status-cli/internal/client"
 	"github.com/yankeexe/slack-status-cli/internal/config"
@@ -38,7 +39,9 @@ var setCmd = &cobra.Command{
 			Message: "Choose a status:",
 			Options: statusList,
 		}
-		survey.AskOne(prompt, &status)
+		err = survey.AskOne(prompt, &status)
+		utils.CheckIfInterrupt(err)
+
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]
 
 		statusPeriod := time.Now().Add(time.Duration(statusDetails.Period) * time.Minute).UTC().Unix()
@@ -50,6 +53,8 @@ var setCmd = &cobra.Command{
 			err = client.SetUserPresence("away")
 			utils.CheckIfError(err)
 		}
+
+		color.Green.Println("✅ Status updated")
 	},
 }
 

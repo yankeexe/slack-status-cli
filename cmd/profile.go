@@ -132,7 +132,8 @@ to select a default profile`)
 			Message: "Select profile to manage:",
 			Options: profiles,
 		}
-		survey.AskOne(prompt, &selectedProfile)
+		err := survey.AskOne(prompt, &selectedProfile)
+		utils.CheckIfInterrupt(err)
 	}
 
 	actionPrompt := &survey.Select{
@@ -174,7 +175,9 @@ func handleSetDefaultProfile(c *config.Config) {
 		Message: "Select profile to set as default:",
 		Options: profiles,
 	}
-	survey.AskOne(prompt, &selectedProfile)
+	err := survey.AskOne(prompt, &selectedProfile)
+	utils.CheckIfInterrupt(err)
+
 	c.Default = config.ProfileInfo{Name: selectedProfile, Token: viper.GetString(fmt.Sprintf("profiles.%s.token", selectedProfile))}
 	c.Save()
 	color.Green.Println("Default profile:", selectedProfile)

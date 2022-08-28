@@ -143,6 +143,7 @@ func (c *Config) AddStatus(store StatusStore) {
 
 	c.Profiles[c.Default.Name] = Profile{Token: profile.Token, StatusList: statusMap}
 	c.Save()
+	color.Green.Println("✅ Status added")
 }
 
 func (c *Config) AddGlobalStatus(store StatusStore) {
@@ -181,7 +182,6 @@ func (c *Config) DeleteProfile(profile string) {
 		Message: fmt.Sprintf("Are you sure you want to delete the profile: %s?", profile),
 	}
 	survey.AskOne(prompt, &confirm)
-	fmt.Println("Profiles", c.Profiles)
 	if confirm {
 		delete(c.Profiles, profile)
 		if c.Default.Name == profile {
@@ -196,10 +196,12 @@ func (c *Config) DeleteProfile(profile string) {
 func (c *Config) RenameProfile(profile string) {
 	name := ""
 	prompt := &survey.Input{
-		Message: fmt.Sprintf("Rename [%s]:", profile),
+		Message: "Rename",
+		Default: profile,
 	}
-	survey.AskOne(prompt, &name)
-	fmt.Println("profiles", c.Profiles[profile])
+	err := survey.AskOne(prompt, &name)
+	utils.CheckIfInterrupt(err)
+
 	if _, exists := c.Profiles[name]; exists {
 		color.Red.Println("Profile already exists!")
 		os.Exit(1)
@@ -218,7 +220,9 @@ func (c *Config) UpdateToken(profile string) {
 	prompt := &survey.Password{
 		Message: fmt.Sprintf("Update OAuth token [%s]", profile),
 	}
-	survey.AskOne(prompt, &token)
+	err := survey.AskOne(prompt, &token)
+	utils.CheckIfInterrupt(err)
+
 	if selected, ok := c.Profiles[profile]; ok {
 		selected.Token = token
 		c.Profiles[profile] = selected
@@ -238,7 +242,8 @@ func (c *Config) EditStatus(profile string, statusList []string) {
 		Message: "Choose a status:",
 		Options: statusList,
 	}
-	survey.AskOne(prompt, &status)
+	err := survey.AskOne(prompt, &status)
+	utils.CheckIfInterrupt(err)
 
 	selectedStatus := c.Profiles[profile].StatusList[status]
 
@@ -261,7 +266,7 @@ func (c *Config) EditStatus(profile string, statusList []string) {
 			},
 		},
 	}
-	err := survey.Ask(qs, &statusContainer)
+	err = survey.Ask(qs, &statusContainer)
 	utils.CheckIfError(err)
 
 	parsed := utils.ParseDuration(statusContainer.UserDefinedDuration)

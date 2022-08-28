@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/gookit/color"
 )
 
@@ -16,6 +17,15 @@ func CheckIfError(err error) {
 	}
 	color.Red.Println(err)
 	os.Exit(1)
+}
+
+func CheckIfInterrupt(err error) {
+	if err != nil {
+		if err == terminal.InterruptErr {
+			color.Red.Println("Interrupt")
+			os.Exit(0)
+		}
+	}
 }
 
 func HandleNoProfiles() {
