@@ -2,12 +2,12 @@
 Lightning fast Slack status updates!⚡
 
 
-## Setting things up
+## Setting things up :hammer:
 
 
-### Get Slack token
+### Get Slack token :ticket:
 
-### Create new profile
+### Create new profile :bear:
 
 ```bash
 st profile --create  # shorthand -c
@@ -26,18 +26,19 @@ st add
 
 ### Select status
 
+
 ```bash
 st set
 ```
 
 
-### Set yourself away
+### Set yourself away :sleeping:
 
 ```bash
 st away
 ```
 
-**Enable Do Not Disturb (DND) while away**
+**Enable Do Not Disturb (DND) while away** :mask:
 
 ```bash
 st away --dnd <time duration>
@@ -51,7 +52,7 @@ Remove any status, or DND settings
 st active
 ```
 
-### Profile management
+### Profile management :wrench:
 
 **Set default profile**
 If you have multiple slack profiles, select default profile using:
@@ -80,7 +81,7 @@ st profile --manage --select # shorthand -m -s
 st profile --show
 ```
 
-### Setting time duration
+### Setting time duration :alarm_clock:
 
 Valid durations for time includes:
 > minutes, hours or days.
