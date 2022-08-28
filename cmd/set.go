@@ -5,7 +5,6 @@ Copyright © 2022 YANKEE MAHARJAN
 package cmd
 
 import (
-	"log"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -41,10 +40,8 @@ var setCmd = &cobra.Command{
 		}
 		survey.AskOne(prompt, &status)
 		statusDetails := c.Profiles[c.Default.Name].StatusList[status]
-		log.Printf("Status Details: %+v\n", statusDetails)
 
 		statusPeriod := time.Now().Add(time.Duration(statusDetails.Period) * time.Minute).UTC().Unix()
-		log.Println("Status Period UNIX", statusPeriod)
 
 		err = client.SetUserCustomStatus(statusDetails.Status, statusDetails.Emoji, statusPeriod)
 		utils.CheckIfError(err)

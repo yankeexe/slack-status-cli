@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -102,7 +101,6 @@ func handleCreateNewProfile(c *config.Config) {
 
 	err := survey.Ask(qs, &profileInfo)
 	utils.CheckIfError(err)
-	log.Println("New profile", profileInfo)
 	c.AddProfile(profileInfo)
 
 	os.Exit(0)
@@ -141,9 +139,7 @@ to select a default profile`)
 		Message: fmt.Sprintf("Select action on profile [%s]", selectedProfile),
 		Options: []string{"Rename profile", "Update token", "Delete", "Edit status"},
 	}
-	log.Println("Selected profiles", selectedProfile)
 	survey.AskOne(actionPrompt, &selectedAction)
-	log.Println("Selected Action", selectedAction)
 
 	switch selectedAction {
 	case "Delete":
@@ -167,7 +163,6 @@ to select a default profile`)
 }
 
 func handleSetDefaultProfile(c *config.Config) {
-	log.Println("Setting default profile")
 	selectedProfile := ""
 	profiles := c.GetProfiles()
 

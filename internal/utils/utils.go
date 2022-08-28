@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"regexp"
@@ -77,10 +76,8 @@ type ParsedDuration struct {
 		| = OR
 */
 func ParseDuration(duration string) ParsedDuration {
-	log.Println("Got", duration)
 	r := regexp.MustCompile(`(?P<Period>^\d+)\s?(?P<Duration>m$|min$|minutes?|h$|hr$|hours?|d$|days?)?`)
 	match := r.FindStringSubmatch(duration)
-	log.Println("Match", match)
 
 	if len(match) == 0 {
 		color.Red.Println(`Invalid status duration

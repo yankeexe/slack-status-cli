@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -57,7 +56,7 @@ func (c *Config) Load() {
 
 func (c *Config) GetProfiles() []string {
 	profiles := []string{}
-	for k, _ := range c.Profiles {
+	for k := range c.Profiles {
 		profiles = append(profiles, k)
 	}
 	return profiles
@@ -66,7 +65,7 @@ func (c *Config) GetProfiles() []string {
 func (c *Config) GetProfileStatus() ([]string, error) {
 	statusList := []string{}
 	profile := c.Profiles[c.Default.Name]
-	for k, _ := range profile.StatusList {
+	for k := range profile.StatusList {
 		statusList = append(statusList, k)
 	}
 
@@ -96,7 +95,6 @@ func (c *Config) exists() {
 }
 
 func (c *Config) AddProfile(profileInfo ProfileInfo) {
-	log.Println("Adding profile")
 	profiles := c.GetProfiles()
 
 	if len(profiles) != 0 {
@@ -148,11 +146,8 @@ func (c *Config) AddStatus(store StatusStore) {
 }
 
 func (c *Config) AddGlobalStatus(store StatusStore) {
-	log.Println("globals", c.Globals)
 	if len(c.Globals) == 0 {
-		log.Println("Appending Globals")
 		c.Globals = append(c.Globals, store)
-		log.Println("Appended Globals", c.Globals)
 		return
 	}
 
