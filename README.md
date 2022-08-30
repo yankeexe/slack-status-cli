@@ -18,14 +18,14 @@ display_information:
     name: slack-status-cli
     description: Lightning fast Slack status updates!
 oauth_config:
-scopes:
-    user:
-    - dnd:write
-    - emoji:read
-    - users.profile:read
-    - users.profile:write
-    - users:read
-    - users:write
+    scopes:
+        user:
+        - dnd:write
+        - emoji:read
+        - users.profile:read
+        - users.profile:write
+        - users:read
+        - users:write
 ```
 
 - Create :rocket:
