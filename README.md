@@ -37,10 +37,10 @@ oauth_config:
 st profile --create  # shorthand -c
 ```
 
-Add your profile name and OAuth token:
-
+<details>
+<summary><strong>Add your profile name and OAuth token:</strong></summary>
 <img width="469" alt="image" src="https://user-images.githubusercontent.com/13623913/187342281-96d95ef2-f69b-4587-83df-034f6e07477d.png">
-
+</details>
 
 ## Usage :rainbow:
 
