@@ -33,8 +33,10 @@ Lightning fast Slack status updates!⚡
 - Go to OAuth and permissions
 - Copy User Auth Token
 
-### Get Slack token :ticket:
+## Download :inbox_tray:
 
+> Get the latest version from [**Releases**](https://github.com/yankeexe/slack-status-cli/releases)
+---
 ### Create new profile :bear:
 
 ```bash
