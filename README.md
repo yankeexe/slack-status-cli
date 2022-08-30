@@ -1,9 +1,13 @@
 # Slack Status CLI
 Lightning fast Slack status updates!⚡
 
+<details>
+<summary><strong> See it in action :fire: </strong></summary>
+<img src="https://user-images.githubusercontent.com/13623913/187346619-213125ef-6ece-4a73-9c8b-5792a240ca7c.gif" width="600" />
+</details>
+
 
 ## Setting things up :hammer:
-
 - [Create a new Slack app](https://api.slack.com/apps)
 - Select from an **app manifest**
 - Select your workspace
