@@ -13,20 +13,20 @@ Lightning fast Slack status updates!⚡
 - Select your workspace
 - Paste the following YAML app manifest:
 
-```yaml
-display_information:
-  name: slack-status-cli
-  description: Lightning fast Slack status updates!
-oauth_config:
-  scopes:
-    user:
-      - dnd:write
-      - emoji:read
-      - users.profile:read
-      - users.profile:write
-      - users:read
-      - users:write
-```
+    ```yaml
+    display_information:
+    name: slack-status-cli
+    description: Lightning fast Slack status updates!
+    oauth_config:
+    scopes:
+        user:
+        - dnd:write
+        - emoji:read
+        - users.profile:read
+        - users.profile:write
+        - users:read
+        - users:write
+    ```
 
 - Create :rocket:
 - Install to workspace
