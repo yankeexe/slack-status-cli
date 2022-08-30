@@ -1,5 +1,6 @@
 /*
-Copyright © 2022 YANKEE MAHARJAN
+Copyright (c) Yankee Maharjan 2022. All rights reserved.
+Licensed under the MIT license. See LICENSE file in the project root for full license information.
 */
 package cmd
 
