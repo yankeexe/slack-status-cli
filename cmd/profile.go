@@ -89,12 +89,12 @@ func handleCreateNewProfile(c *config.Config) {
 	var qs = []*survey.Question{
 		{
 			Name:     "name",
-			Prompt:   &survey.Input{Message: "Profile name"},
+			Prompt:   &survey.Input{Message: "Profile name:"},
 			Validate: survey.Required,
 		},
 		{
 			Name:     "token",
-			Prompt:   &survey.Password{Message: "User OAuth Token"},
+			Prompt:   &survey.Password{Message: "User OAuth Token:"},
 			Validate: survey.Required,
 		},
 	}
@@ -137,14 +137,13 @@ to select a default profile`)
 	}
 
 	actionPrompt := &survey.Select{
-		Message: fmt.Sprintf("Select action on profile [%s]", selectedProfile),
+		Message: fmt.Sprintf("Select action on profile [%s]:", selectedProfile),
 		Options: []string{"Rename profile", "Update token", "Delete", "Edit status"},
 	}
 	survey.AskOne(actionPrompt, &selectedAction)
 
 	switch selectedAction {
 	case "Delete":
-		fmt.Println("Proceeding to delete")
 		c.DeleteProfile(selectedProfile)
 	case "Rename profile":
 		c.RenameProfile(selectedProfile)
