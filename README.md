@@ -4,6 +4,30 @@ Lightning fast Slack status updates!⚡
 
 ## Setting things up :hammer:
 
+- [Create a new Slack app](https://api.slack.com/apps)
+- Select from an **app manifest**
+- Select your workspace
+- Paste the following YAML app manifest:
+
+```yaml
+display_information:
+  name: slack-status-cli
+  description: Lightning fast Slack status updates!
+oauth_config:
+  scopes:
+    user:
+      - dnd:write
+      - emoji:read
+      - users.profile:read
+      - users.profile:write
+      - users:read
+      - users:write
+```
+
+- Create :rocket:
+- Install to workspace
+- Go to OAuth and permissions
+- Copy User Auth Token
 
 ### Get Slack token :ticket:
 
