@@ -36,6 +36,19 @@ oauth_config:
 ### Download :inbox_tray:
 
 > Get the latest version from [**Releases**](https://github.com/yankeexe/slack-status-cli/releases)
+
+Make it executable 
+
+```sh
+chmod +x st_<version_platform_arch>
+```
+
+Move to your `$PATH`
+
+```sh
+mv st_<version_platform_arch> <$PATH>/st
+```
+
 ---
 ### Create new profile :bear:
 
@@ -121,7 +134,7 @@ Valid durations for time includes:
 > minutes, hours or days.
 DEFAULTS to minutes
 
-**NOTE: use single or double quotes around the value if contains space.**
+**NOTE: use single or double quotes around the time duration values.**
 
 OPTIONS for the duration:
 
